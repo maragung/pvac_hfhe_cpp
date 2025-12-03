@@ -66,12 +66,6 @@ double s_byte_ent(const Cipher& c) {
     return shannon(freq, total);
 }
 
-
-
-
-/// @brief 
-/// @param c 
-/// @return 
 double avg_s_hw(const Cipher& c) {
     if (c.E.empty()) return 0.0;
     double sum = 0.0;
@@ -383,13 +377,9 @@ int main() {
     pr_analysis("fact (10!)", fact);
     ///
 
-
-
-
-
     std::cout << "\n- text -\n";
 
-        std::string msg = "test_test_test data dadfs98324134;'!//.d,d''d,mm";
+    std::string msg = "test_test_test data dadfs98324134;'!//.d,d''d,mm";
 
     auto tcts = enc_text(pk, sk, msg);
     std::string msg2 = dec_text(pk, sk, tcts);

@@ -1,68 +1,52 @@
-CXX      := g++
+CXX := g++
 CXXFLAGS := -std=c++17 -O2 -march=native -Wall -Wextra -I./include
-
 DEBUG_FLAGS := -g -O0 -DPVAC_DEBUG
 SANITIZE_FLAGS := -fsanitize=address,undefined
+BUILD := build
+TESTS := tests
+EXAMPLES := examples
 
-BUILD_DIR := build
-TESTS_DIR := tests
-EXAMPLES_DIR := examples
+all: $(BUILD)/test_main
 
-all: $(BUILD_DIR)/test_main
+$(BUILD):
+	mkdir -p $(BUILD)
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
-
-$(BUILD_DIR)/test_main: $(TESTS_DIR)/test_main.cpp | $(BUILD_DIR)
+$(BUILD)/test_main: $(TESTS)/test_main.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
-debug: CXXFLAGS += $(DEBUG_FLAGS)
-debug: $(BUILD_DIR)/test_main_debug
+$(BUILD)/test_hg: $(TESTS)/test_hg.cpp | $(BUILD)
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
-$(BUILD_DIR)/test_main_debug: $(TESTS_DIR)/test_main.cpp | $(BUILD_DIR)
+$(BUILD)/test_main_debug: $(TESTS)/test_main.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) -o $@ $<
 
-sanitize: CXXFLAGS += $(DEBUG_FLAGS) $(SANITIZE_FLAGS)
-sanitize: $(BUILD_DIR)/test_main_sanitize
+$(BUILD)/test_main_san: $(TESTS)/test_main.cpp | $(BUILD)
+	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) $(SANITIZE_FLAGS) -o $@ $
 
-$(BUILD_DIR)/test_main_sanitize: $(TESTS_DIR)/test_main.cpp | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) $(SANITIZE_FLAGS) -o $@ $<
-
-test: $(BUILD_DIR)/test_main
-	@echo "running tests..."
-	@./$(BUILD_DIR)/test_main
-
-test-verbose: $(BUILD_DIR)/test_main
-	@echo "running tests (verbose)..."
-	@PVAC_DBG=2 ./$(BUILD_DIR)/test_main
-
-test-quiet: $(BUILD_DIR)/test_main
-	@PVAC_DBG=0 ./$(BUILD_DIR)/test_main
-
-examples: $(BUILD_DIR)/basic_usage
-
-$(BUILD_DIR)/basic_usage: $(EXAMPLES_DIR)/basic_usage.cpp | $(BUILD_DIR)
+$(BUILD)/basic_usage: $(EXAMPLES)/basic_usage.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
+debug: $(BUILD)/test_main_debug
+sanitize: $(BUILD)/test_main_san
+examples: $(BUILD)/basic_usage
+
+test: $(BUILD)/test_main
+	@./$(BUILD)/test_main
+
+test-v: $(BUILD)/test_main
+	@PVAC_DBG=2 ./$(BUILD)/test_main
+
+test-q: $(BUILD)/test_main
+	@PVAC_DBG=0 ./$(BUILD)/test_main
+
+test-hg: $(BUILD)/test_hg
+	@./$(BUILD)/test_hg
+
 clean:
-	rm -rf $(BUILD_DIR)
-	rm -f pvac_metrics.csv
+	rm -rf $(BUILD) pvac_metrics.csv
 
 help:
-	@echo "pvac build system"
-	@echo ""
-	@echo "targets:"
-	@echo "  all          - build main test executable (default)"
-	@echo "  test         - build and run tests"
-	@echo "  test-verbose - run tests with verbose output"
-	@echo "  test-quiet   - run tests with no output"
-	@echo "  debug        - build with debug symbols"
-	@echo "  sanitize     - build with addresssanitizer"
-	@echo "  examples     - build example programs"
-	@echo "  clean        - remove build artifacts"
-	@echo "  help         - show this help message"
-	@echo ""
-	@echo "environment variables:"
-	@echo "  PVAC_DBG=0   - no debug output"
-	@echo "  PVAC_DBG=1   - normal debug output (default)"
-	@echo "  PVAC_DBG=2   - verbose debug output"
+	@echo "targets: all test test-v test-q test-hg debug sanitize examples clean"
+	@echo "env: PVAC_DBG=0|1|2"
+
+.PHONY: all test test-v test-q test-hg clean help

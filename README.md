@@ -19,6 +19,12 @@ make clean # remove build trash
 ./build/basic_usage # run example
 ```
 
+## update dec 3
+added the diagnostic test_hg to check whether a hypergraph H has one giant component, uniform degrees, random edge intersections, etc. (no structural attacks were detected)
+
+```bash
+make test-hg
+```
 
 ## usage
 ```cpp
@@ -48,13 +54,3 @@ int main() {
     return 0;
 }
 ```
-
-| op | func | example |
-|-----------|----------|---------|
-| enc | `enc_value(pk, sk, x)` | `Cipher c = enc_value(pk, sk, 42)` |
-| dec | `dec_value(pk, sk, c)` | `Fp x = dec_value(pk, sk, c)` |
-| add | `ct_add(pk, a, b)` | `a + b` |
-| sub | `ct_sub(pk, a, b)` | `a - b` |
-| mul | `ct_mul(pk, a, b)` | `a * b` |
-| scale | `ct_scale(pk, c, k)` | `c * k` (k is plaintext) |
-| recrypt | `ct_recrypt(pk, ek, c)` | refresh ct |
