@@ -77,32 +77,3 @@ int main() {
 g++ -std=c++17 -O2 -march=native -I./include example.cpp -o example
 ./example
 ```
-
-### parameters & measurements
-
-| parameter | value | description |
-|-----------|-------|-------------|
-| n | 4096 | lpn dimension |
-| tau | 1 div 8 | noise rate |
-| Fp | 2^127−1 | prime field |
-| m | 8192 | hypergraph bit-width |
-
-#### depth test (c <- c × c chain) 
-| depth | layers | mul | dec | status |
-|-------|--------|----------|---------|--------|
-| 1 | 3 | 22 ms | 0.8 s | ok |
-| 5 | 63 | 107 ms | 12 s | ok |
-| 10 | 2047 | 1.2 s | 388 s | ok |
-
-#### ct size
-| state | edges | layers | memory |
-|-------|-------|--------|--------|
-| fresh | 20 | 1 | 21 KB |
-| after mul | 290 | 3 | 313 KB |
-| after x^3 | 575 | 5 | 621 KB |
-| compacted | 674 | varies | ~728 KB |
-
-
-## license
-
-this project is licensed under the **mit license**
