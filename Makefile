@@ -38,9 +38,14 @@ $(BUILD)/test_depth: $(TESTS)/test_depth.cpp | $(BUILD)
 $(BUILD)/test_sigma: $(TESTS)/test_sigma.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
+$(BUILD)/test_zero: $(TESTS)/test_zero.cpp | $(BUILD)
+	$(CXX) $(CXXFLAGS) -o $@ $<
+
+
 debug: $(BUILD)/test_main_debug
 sanitize: $(BUILD)/test_main_san
 examples: $(BUILD)/basic_usage
+test_zero: $(BUILD)/test_zero
 
 
 test: $(BUILD)/test_main
@@ -55,7 +60,6 @@ test-q: $(BUILD)/test_main
 test-hg: $(BUILD)/test_hg
 	@./$(BUILD)/test_hg
 
-
 test-prf: $(BUILD)/test_prf
 	@./$(BUILD)/test_prf
 
@@ -67,6 +71,9 @@ test-depth: $(BUILD)/test_depth
 
 test-sigma: $(BUILD)/test_sigma
 	@./$(BUILD)/test_sigma
+
+test-zero: $(BUILD)/test_zero
+	@./$(BUILD)/test_zero
 
 clean:
 	rm -rf $(BUILD) pvac_metrics.csv
